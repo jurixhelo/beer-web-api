@@ -25,10 +25,11 @@
 const mongoose = require("mongoose");
 
 const beerSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
   name: { type: String, required: true },
   type: { type: String, required: true },
-  rating: { type: Number, min: 1, max: 5 },
+  rating: { type: Number, min: 1, max: 5 }, // Single rating value (current)
+  sumOfRatings: { type: Number, default: 0 }, // Sum of all ratings
+  ratingCount: { type: Number, default: 1 }, // Total number of times the beer was rated
 });
 
 const Beer = mongoose.model("Beer", beerSchema);

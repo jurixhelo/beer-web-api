@@ -7,7 +7,7 @@ const BeerController = {
       if (!name || !type) {
         return res.status(400).json({ error: "Name and type are required." });
       }
-      const newBeer = new Beer({ name, type, rating });
+      const newBeer = new Beer({ name, type, rating, sumOfRatings: rating });
       await newBeer.save();
       res.status(201).json(newBeer);
     } catch (err) {
@@ -26,7 +26,7 @@ const BeerController = {
 
   searchBeers: async (req, res) => {
     try {
-      const { query } = req.query;
+      const query = req.query.q;
       if (!query) {
         return res.status(400).json({ error: "Query is required." });
       }
@@ -55,7 +55,10 @@ const BeerController = {
       }
 
       // Calculate new average rating
-      beer.rating = beer.rating ? (beer.rating + rating) / 2 : rating;
+      beer.sumOfRatings += rating;
+      beer.ratingCount += 1;
+      beer.rating = beer.rating ? beer.sumOfRatings / beer.ratingCount : rating;
+
       await beer.save();
       res.status(200).json(beer);
     } catch (err) {
